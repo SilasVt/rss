@@ -6,9 +6,35 @@
 // it under the terms of the MIT License and/or Apache 2.0 License.
 // Modified for Podcast namespace in 2023 by Silas Vogt
 
+use std::collections::BTreeMap;
+use std::io::Write;
+
+use quick_xml::events::{BytesStart, Event};
+use quick_xml::Error as XmlError;
+use quick_xml::Writer;
+
+use super::{parse_categories, parse_image, parse_owner, NAMESPACE};
+use crate::extension::itunes::{ITunesCategory, ITunesOwner};
+use crate::extension::util::remove_extension_value;
+use crate::extension::Extension;
+use crate::toxml::{ToXml, WriterExt};
+
+/// An iTunes channel element extension.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Default, Clone, PartialEq)]
+#[cfg_attr(feature = "builders", derive(Builder))]
+#[cfg_attr(
+    feature = "builders",
+    builder(
+        setter(into),
+        default,
+        build_fn(name = "build_impl", private, error = "never::Never")
+    )
+)]
+
 pub struct PodcastChannelExtension {
     /// Specifies if the feed is locked or not. Telling platforms if they are allowed to import the feed or not.
-    pub locked: Option<String>,
+    pub locked: Option<String>, ///done
     /// This tag lists possible donation links for the podcast.
     pub funding: Option<String>,
     /// Specifies people like for example the host, guest, or other roles on the podcast.
@@ -43,3 +69,32 @@ pub struct PodcastChannelExtension {
     pub podping: Option<String>,
 
 }
+
+
+pub struct PodcastChannelExtension {
+
+    ///Get if Podcast is locked.
+pub fn locked(&self) -> Option<&str> {
+        self.locked.as_deref()
+    }
+
+    /// Set the locked state of this podcast.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rss::extension::podcast::PodcastChannelExtension;
+    ///
+    /// let mut extension = PodcastChannelExtension::default();
+    /// extension.set_locked("no".to_string()); ///yes or no allowed.
+    /// ```
+    pub fn set_locked<V>(&mut self, locked: V)
+    where
+        V: Into<Option<String>>,
+    {
+        self.locked = locked.into();
+    }
+
+
+
+    } ///End of impl PodcastChannelExtension
