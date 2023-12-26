@@ -34,7 +34,7 @@ use crate::toxml::{ToXml, WriterExt};
 
 pub struct PodcastChannelExtension {
     /// Specifies if the feed is locked or not. Telling platforms if they are allowed to import the feed or not.
-    pub locked: Option<String>, ///done
+    pub locked: Option<String>,
     /// This tag lists possible donation links for the podcast.
     pub funding: Option<String>,
     /// Specifies people like for example the host, guest, or other roles on the podcast.
