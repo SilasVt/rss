@@ -9,9 +9,14 @@ use std::collections::BTreeMap;
 
 use crate::extension::Extension;
 
-mod podcast_locked;
-mod podcast_channel_extension;
 
+mod podcast_channel_extension;
+mod podcast_item_extension;
+mod podcast_locked;
+mod podcast_transcript;
+mod podcast_funding;
+mod podcast_chapters;
+mod podcast_soundbite;
 
 pub use self::podcast_channel_extension::*;
 pub use self::podcast_locked::*;

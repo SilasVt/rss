@@ -11,10 +11,14 @@ use quick_xml::events::{BytesStart, Event};
 use quick_xml::Error as XmlError;
 use quick_xml::Reader;
 use quick_xml::Writer;
+use quick_xml::events::BytesText;
+use quick_xml::events::BytesEnd;
+
 
 use crate::error::Error;
 use crate::toxml::ToXml;
 use crate::util::{attr_value, decode, skip};
+use crate::toxml::{ToXml, WriterExt};
 
 /// Represents a funding tag in the podcast namespace.
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -39,12 +43,12 @@ pub struct PodcastFunding {
 impl PodcastFunding {
     // Getter and setter methods for `url` and `description`.
 
-    pub fn url(&self) -> Option<&str> {
-        self.url.as_deref()
+    pub fn url(&self) -> &str {
+        self.url.as_str()
     }
 
-    pub fn description(&self) -> Option<&str> {
-        self.description.as_deref()
+    pub fn description(&self) -> &str {
+        self.description.as_str()
     }
 
     /// use rss::extension::podcast::PodcastFunding;
@@ -54,32 +58,19 @@ impl PodcastFunding {
     /// ```
     pub fn set_url<V>(&mut self, url: V)
     where
-        V: Into<Option<String>>,
+        V: Into<String>,
     {
         self.url = url.into();
     }
 
     pub fn set_description<V>(&mut self, description: V)
     where
-        V: Into<Option<String>>,
+        V: Into<String>,
     {
         self.description = description.into();
     }
 }
 
 
-
-impl ToXml for PodcastFunding {
-    fn to_xml<W: Write>(&self, writer: &mut Writer<W>) -> Result<(), XmlError> {
-        let name = "podcast:funding";
-        let mut element = BytesStart::new(name);
-
-        element.push_attribute(("url", self.url.as_str()));
-        writer.write_event(Event::Start(element))?;
-        writer.write_event(Event::Text(BytesText::from_plain_str(&self.description)))?;
-        writer.write_event(Event::End(BytesEnd::borrowed(b"podcast:funding")))?;
-
-        Ok(())
-    }
-}
+ //Space for to and from XML
 
